@@ -4,88 +4,34 @@ import java.util.Scanner;
 public class Monde{
   private static final Scanner scanner = new Scanner(System.in);
 
-  public static void combat(Personnage personnage, Monstre monstre){
+  public static void combat(ICombattant combattant1, ICombattant combattant2){
     //Le tour est accordé au combattant ayant le moins de dégâts.
-    //En cas d'égalité, le tour est accordé au personnage.
-    //Si tour == true, alors c'est le tour du personnage.
-    boolean turn = personnage.degats >= monstre.degats;
-    while(personnage.pointsDeVie > 0 && monstre.pointsDeVie > 0){
+    //En cas d'égalité, le tour est accordé au combattant1.
+    //Si tour == true, alors c'est le tour du combattant1.
+    boolean turn = combattant1.getDegats() >= combattant2.getDegats();
+    while(combattant1.getPointsDeVie() > 0 && combattant2.getPointsDeVie() > 0){
       if(turn){
-        Colorator.coloredPrint("Tour du joueur!", "PURPLE");
-        /*  Le combattant va lancer un dé pour savoir s'il réussit son
-        attaque, ou non.
-        00-05 > 00% des dégâts.  | Esquivé !
-        06-49 > 50% des dégâts.  | Résisté !
-        50-94 > 100% des dégâts. | Touché !
-        95-99 > 200% des dégâts. | CRITIQUE !
-        */
-        int roll = new Random().nextInt(0,99);
-        if(roll <= 5){
-          System.out.println("Le monstre a esquivé!");
-        }
-        else if (roll <= 49) {
-          int degatsInfliges = (int)(Math.round(personnage.degats * 0.5));
-          monstre.pointsDeVie -= degatsInfliges;
-          System.out.println("Le monstre a résisté!");
-          System.out.println(
-                  "Vous avez infligé " + degatsInfliges + " dégâts.");
-        }
-        else if (roll <= 94){
-          monstre.pointsDeVie -= personnage.degats;
-          System.out.println("Touché!");
-          System.out.println(
-                  "Vous avez infligé " + personnage.degats + " dégâts.");
-        }
-        else if (roll <= 99){
-          int degatsInfliges = personnage.degats * 2;
-          monstre.pointsDeVie -= degatsInfliges;
-          System.out.println("Coup critique!");
-          System.out.println(
-                  "Vous avez infligé " + degatsInfliges + " dégâts.");
-        }
         System.out.println(
-                "Il vous reste " + personnage.pointsDeVie + " HP.");
+          Colorator.coloredPrint("Tour de " + combattant1 + " !", "PURPLE")
+        );
+        combattant1.attaquer(combattant2);
+        System.out.println(
+          Colorator.coloredPrint("Il reste " + combattant2.getPointsDeVie() + " HP à l'ennemi.", "BLUE")
+        );
         turn = false;
       }
       else{
-        System.out.println("Tour de l'ennemi!");
-        /*  Le combattant va lancer un dé pour savoir s'il réussit son
-        attaque, ou non.
-        00-05 > 00% des dégâts.  | Esquivé !
-        06-49 > 50% des dégâts.  | Résisté !
-        50-94 > 100% des dégâts. | Touché !
-        95-99 > 200% des dégâts. | CRITIQUE !
-        */
-        int roll = new Random().nextInt(0,99);
-        if(roll <= 5){
-          System.out.println("Vous avez esquivé l'attaque!");
-        }
-        else if (roll <= 49) {
-          int degatsInfliges = (int)(Math.round(monstre.degats * 0.5));
-          personnage.pointsDeVie -= degatsInfliges;
-          System.out.println("Vous avez résisté à l'attaque!");
-          System.out.println(
-                  "Vous avez subi " + degatsInfliges + " dégâts.");
-        }
-        else if (roll <= 94){
-          personnage.pointsDeVie -= monstre.degats;
-          System.out.println("Le monstre vous a attaqué!");
-          System.out.println(
-                  "Vous avez subi " + monstre.degats + " dégâts.");
-        }
-        else if (roll <= 99) {
-          int degatsInfliges = monstre.degats * 2;
-          personnage.pointsDeVie -= degatsInfliges;
-          System.out.println("Coup critique!");
-          System.out.println(
-                  "Vous avez subi " + degatsInfliges + " dégâts.");
-        }
-        turn = true;
         System.out.println(
-                "Il reste à l'ennemi " + monstre.pointsDeVie + " HP.");
+          Colorator.coloredPrint("Tour de " + combattant2 + " !", "PURPLE")
+        );
+        combattant2.attaquer(combattant1);
+        System.out.println(
+          Colorator.coloredPrint("Il vous reste " + combattant1.getPointsDeVie() + " HP.", "BLUE")
+        );
+        turn = true;
       }
     }
-    if(personnage.pointsDeVie <=0){
+    if(combattant1.getPointsDeVie() <=0){
       System.out.println("Perdu ! Vous êtes mort.");
     }
     else{

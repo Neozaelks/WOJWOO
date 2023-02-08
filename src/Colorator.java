@@ -33,7 +33,7 @@ public class Colorator {
   }
 
   public static String decoratedPrint(String string, String decoration){
-    //allows for BOLD, ITALIC
+    //allows for BOLD, ITALIC, UNDERLINE, CROSSED-OUT
     switch (decoration) {
       case "BOLD" -> {
         return "\u001B[1m" + string + "\u001B[0m";
