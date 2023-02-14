@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -44,8 +46,16 @@ public class Monde{
     String nomPersonnage = scanner.next();
     int pointsDeVie = new Random().nextInt(35,50);
     int degats = new Random().nextInt(5,15);
+    IAttaque attaque1 = new Attaque("Attaque Normale", 50);
+    IAttaque attaque2 = new Attaque("Attaque Difficile", 35);
+    IAttaque attaque3 = new Attaque("Attaque Simple", 65);
+    List<IAttaque> attaques = new ArrayList<IAttaque>();
+    attaques.add(attaque1);
+    attaques.add(attaque2);
+    attaques.add(attaque3);
+    Classe aventurier = new Classe(attaques, "Aventurier");
     Personnage personnage = new Personnage(
-            nomPersonnage, pointsDeVie, degats);
+            nomPersonnage, pointsDeVie, degats, aventurier);
     System.out.println(personnage);
     return personnage;
   }
@@ -54,7 +64,11 @@ public class Monde{
             " " + finNom[new Random().nextInt(finNom.length)];
     int pointsDeVie = new Random().nextInt(20,40);
     int degats = new Random().nextInt(2, 10);
-    Monstre monstre = new Monstre(nomMonstre, pointsDeVie, degats);
+    Attaque attaque = new Attaque("Attaque", 50);
+    List<IAttaque> attaques = new ArrayList<IAttaque>();
+    attaques.add(attaque);
+    Classe classe = new Classe(attaques, "monstre");
+    Monstre monstre = new Monstre(nomMonstre, pointsDeVie, degats, classe);
     System.out.println(monstre);
     return monstre;
   }
@@ -85,7 +99,4 @@ public class Monde{
           "énervé","déprimé","encourageant","de Carglass","Légendaire","Mythique"
   };
 
-//  public static void afficherInformations(){
-//    //OSEF
-//  }
 }
