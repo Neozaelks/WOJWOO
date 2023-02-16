@@ -1,10 +1,35 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import org.w3c.dom.ls.LSOutput;
+
+import java.util.*;
 
 public class Monde{
   private static final Scanner scanner = new Scanner(System.in);
+  public static HashMap<String, Classe> dictionnaireClasses = new HashMap<String, Classe>();
+  public static void initialiserClasses(){
+    List<IAttaque> attaques = new ArrayList<IAttaque>(
+      List.of(
+        new Attaque("Attaque Normale", 50),
+        new Attaque("Attaque Difficile", 35),
+        new Attaque("Attaque Simple", 65)
+      )
+    ){};
+    List<IAttaque> attaqueMonstre = new ArrayList<IAttaque>(
+      List.of(
+        new Attaque("Attaque Normale", 50)
+      )
+    ){};
+    dictionnaireClasses.put("Aventurier", new Classe(attaques, "Aventurier"));
+    dictionnaireClasses.put("Monstre", new Classe(attaqueMonstre, "Monstre"));
+  }
+  public static Classe getClasseInDictionnaire(String classe){
+    if(dictionnaireClasses.get(classe) != null){
+      return dictionnaireClasses.get(classe);
+    }
+    else{
+      throw new RuntimeException();
+    }
+  }
+
 
   public static void combat(ICombattant combattant1, ICombattant combattant2){
     //Le tour est accordé au combattant ayant le moins de dégâts.
@@ -43,17 +68,15 @@ public class Monde{
 
   public static Personnage personnageFactory(){
     System.out.println("Entrez le nom de votre personnage :");
-    String nomPersonnage = scanner.next();
+    String nomPersonnage = scanner.nextLine();
     int pointsDeVie = new Random().nextInt(35,50);
     int degats = new Random().nextInt(5,15);
-    IAttaque attaque1 = new Attaque("Attaque Normale", 50);
-    IAttaque attaque2 = new Attaque("Attaque Difficile", 35);
-    IAttaque attaque3 = new Attaque("Attaque Simple", 65);
-    List<IAttaque> attaques = new ArrayList<IAttaque>();
-    attaques.add(attaque1);
-    attaques.add(attaque2);
-    attaques.add(attaque3);
-    Classe aventurier = new Classe(attaques, "Aventurier");
+    System.out.println("Quelle classe voulez-vous choisir ?");
+    dictionnaireClasses.forEach((key, value) -> {
+      System.out.println(key);
+    });
+    String classeChoisie = scanner.nextLine();
+    Classe aventurier = getClasseInDictionnaire(classeChoisie);
     Personnage personnage = new Personnage(
             nomPersonnage, pointsDeVie, degats, aventurier);
     System.out.println(personnage);
